@@ -51,6 +51,9 @@ ENV DOCKER_RUN=true \
     YS_ADMIN_PASS=${YS_ADMIN_PASS} \
     YS_ADMIN_EMAIL=${YS_ADMIN_EMAIL} \
     DJANGO_SETTINGS_MODULE=yangsuite.settings.production
+    PROXY_HTTP=http://proxy.esl.cisco.com:80
+    PROXY_HTTPS=http://proxy.esl.cisco.com:80
+    NO_PROXY=localhost,127.0.0.1
     
 ENV DJANGO_STATIC_ROOT=${STATIC_ROOT} \
     DJANGO_ALLOWED_HOSTS=${ALLOWED_HOSTS} 
