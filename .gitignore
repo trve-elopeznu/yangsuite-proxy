@@ -70,3 +70,5 @@ playground.xcworkspace
 one-container-alternative/certificate/*.crt
 one-container-alternative/certificate/*.key
 one-container-alternative/certificate/*.pem
+one-container-alternative/build-assets/repos_default_btgnf.tgz
+one-container-alternative/build-assets/repos_default_btgnf.tgz.bak

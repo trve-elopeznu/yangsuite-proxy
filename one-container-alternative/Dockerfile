@@ -5,6 +5,13 @@ FROM python:${PY_VERSION} as base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ENV PROXY_HTTP=http://proxy.esl.cisco.com:80 \
+    PROXY_HTTPS=http://proxy.esl.cisco.com:80 \
+    NO_PROXY=localhost,127.0.0.1 \
+    https_proxy=http://proxy.esl.cisco.com:80 \
+    http_proxy=http://proxy.esl.cisco.com:80 \
+    no_proxy=localhost,127.0.0.1
+
 RUN apt-get update -y \
     && apt-get install -yq \
       inotify-tools \
@@ -29,15 +36,16 @@ ARG PIP_NO_WARN_SCRIPT_LOCATION=0
 ARG PIP_DISABLE_ROOT_WARNING=ignore
 ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 
+
 COPY python_dependencies/requirements.txt /tmp/requirements.txt
 
-RUN pip install --upgrade -r /tmp/requirements.txt 
+RUN pip install --upgrade --proxy=$proxy_https -r /tmp/requirements.txt 
 
 
 # stage for yangsuite setup
 FROM python_dependencies as app_setup
 
-EXPOSE 8480 57500 57501
+EXPOSE 8480 9443 57500 57501
 
 ARG YS_ADMIN_USER=developer
 ARG YS_ADMIN_PASS=developer
@@ -50,7 +58,7 @@ ENV DOCKER_RUN=true \
     YS_ADMIN_USER=${YS_ADMIN_USER} \
     YS_ADMIN_PASS=${YS_ADMIN_PASS} \
     YS_ADMIN_EMAIL=${YS_ADMIN_EMAIL} \
-    DJANGO_SETTINGS_MODULE=yangsuite.settings.production
+    DJANGO_SETTINGS_MODULE=yangsuite.settings.production 
     
 ENV DJANGO_STATIC_ROOT=${STATIC_ROOT} \
     DJANGO_ALLOWED_HOSTS=${ALLOWED_HOSTS} 
@@ -70,6 +78,7 @@ RUN groupadd --gid 1000 developer \
     && mkdir -p ${MEDIA_ROOT} \
     && mkdir -p ${STATIC_ROOT} \
     && mkdir -p /certificate \
+    && tar -xzf /build-assets/repos_default_btgnf.tgz -C /${MEDIA_ROOT} --strip-components=1 \
     && chmod u+s /bin/ping \
     && chmod +x /build-assets/start_daphne.sh \
     && chmod +x /build-assets/monitor_logs.sh \
