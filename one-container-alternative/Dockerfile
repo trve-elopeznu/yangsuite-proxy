@@ -5,11 +5,11 @@ FROM python:${PY_VERSION} as base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PROXY_HTTP=http://proxy.esl.cisco.com:80 \
-    PROXY_HTTPS=http://proxy.esl.cisco.com:80 \
+ENV PROXY_HTTP=<PROXY_HTTP> \
+    PROXY_HTTPS=<PROXY_HTTPS> \
     NO_PROXY=localhost,127.0.0.1 \
-    https_proxy=http://proxy.esl.cisco.com:80 \
-    http_proxy=http://proxy.esl.cisco.com:80 \
+    https_proxy=<PROXY_HTTPS> \
+    http_proxy=<PROXY_HTTP> \
     no_proxy=localhost,127.0.0.1
 
 RUN apt-get update -y \
