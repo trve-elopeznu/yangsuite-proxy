@@ -124,6 +124,35 @@ Your YANG Suite data is stored in the Docker volume `yangsuite-one-container-dat
 - Data survives container removal (unless you run `make rm-volume`).
 - You can backup/restore data by managing this volume.
 
+
+## Import Repositories & Yangsets
+
+If you wish to import an existent yang repositores and yangsets, as they take some time to make. You need to take the following considerations: 
+ - Copy the compressed .tgz file into /build-assets
+ - Compressed file must be created with tar gnu tool
+ - Compressed file should have the same folder structure inside /yangsuite to be uncompressed under /ys-data, following this folder structure:
+ ```text
+/                 # ← yangsuite environment root inside contaner
+└── ys-data/      # ← data is uncompressed here
+    ├── users
+            ├── repositories                    
+                    ├── developer                 # directory for user developer
+                        ├── repositories/         # repositories are stored here
+                        ├── yangsets/             # yangsets are stored here
+                                └── yangset-file  # this is file with yangset details
+```
+ - If you import yangsets & repositores from another yangsuite instance, consider each yangset file must be modified to user 'developer'
+   - open each yangset file, and verify this lines contain the owner as 'developer'
+   - repository value should also include 'developer+yang-repository_name'
+   ```json
+        {
+        "setname": "BGP_XR_7102",
+        "owner": "developer",
+        "repository": "developer+yang-repository-name",
+   ```
+ - to enable uncompressing the file with Docker file you must add this line to Dockerfile on line 81
+    ```    && tar -xzf /build-assets/repository_import.tgz -C /${MEDIA_ROOT} --strip-components=1 \```
+
 ## Quick Development Workflow
 
 For development and testing, use this command to rebuild and restart everything:
