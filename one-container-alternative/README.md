@@ -151,7 +151,8 @@ If you wish to import an existent yang repositores and yangsets, as they take so
         "repository": "developer+yang-repository-name",
    ```
  - to enable uncompressing the file with Docker file you must add this line to Dockerfile on line 81
-    ```    && tar -xzf /build-assets/repository_import.tgz -C /${MEDIA_ROOT} --strip-components=1 \```
+
+   - ```    && tar -xzf /build-assets/repository_import.tgz -C /${MEDIA_ROOT} --strip-components=1 \```
 
 ## Quick Development Workflow
 
